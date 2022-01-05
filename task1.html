@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    table, th,td{
+        border:  1px solid black;
+        border-collapse: collapse;
+    }
+</style>
+<body>
+    <h1>Smart Serv Json Data From API</h1>
+    <p>
+       count : <span id="count"> </span>
+    </p>
+    <h3>Products : </h3>
+    <table>
+            <tr>
+                <th>S.No.</th>
+                <th>subcategory</td>
+                <th>title</td>
+                <th>price</td>
+                <th>popularity</td>
+            </tr>
+        <tbody id="myTable"></tbody>
+    </table>
+    <script>
+        const api_url = 'https://s3.amazonaws.com/open-to-cors/assignment.json';
+        fetch(api_url)
+        .then(response => response.json())
+        .then(function (result){
+            var products = Object.values(result.products);
+            var sortedProducts =products.sort(function(x,y){
+                return y.popularity-x.popularity;
+            })
+            document.getElementById('count').textContent = result.count;
+            buildTable(sortedProducts)         
+        })
+        .catch(error => console.log('error',error));
+
+        function buildTable(data){
+            var table = document.getElementById('myTable');
+            
+            for(var i =0 ;i<data.length;i++){
+                var row = `<tr>
+                    <td>${i+1}</td>
+                    <td>${data[i].subcategory}</td>
+                    <td>${data[i].title} </td>
+                    <td>${data[i].price} </td>
+                    <td>${data[i].popularity} </td>
+                    </tr>`;
+                table.innerHTML +=row;
+            }
+        }
+    </script>
+</body>
+</html>
